@@ -16,7 +16,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/majiayu000/gin-starter/internal/types"
 	"golang.org/x/oauth2"
-	googleOAuth2 "golang.org/x/oauth2/google"
 	googleauth "google.golang.org/api/oauth2/v2"
 	"google.golang.org/api/option"
 )
@@ -26,52 +25,53 @@ type AppleProvider struct {
 	sessionManager types.SessionManager
 }
 
-func NewAppleProvider(config map[string]string, sessionManager types.SessionManager) (*AppleProvider, error) {
-	clientID, ok := config["client_id"]
-	if !ok {
-		return nil, errors.New("Apple client ID is missing")
-	}
+func NewAppleProvider(config map[string]string, sessionManager types.SessionManager) error {
+	return nil
+	// clientID, ok := config["client_id"]
+	// if !ok {
+	// 	return nil, errors.New("Apple client ID is missing")
+	// }
 
-	teamID, ok := config["team_id"]
-	if !ok {
-		return nil, errors.New("Apple client ID is missing")
-	}
+	// teamID, ok := config["team_id"]
+	// if !ok {
+	// 	return nil, errors.New("Apple client ID is missing")
+	// }
 
-	keyID, ok := config["key_id"]
-	if !ok {
-		return nil, errors.New("Apple client secret is missing")
-	}
+	// keyID, ok := config["key_id"]
+	// if !ok {
+	// 	return nil, errors.New("Apple client secret is missing")
+	// }
 
-	privateKey, ok := config["private_key"]
-	if !ok {
-		return nil, errors.New("Apple client ID is missing")
-	}
+	// privateKey, ok := config["private_key"]
+	// if !ok {
+	// 	return nil, errors.New("Apple client ID is missing")
+	// }
 
-	token, nil := generateToken(privateKey, teamID, clientID)
+	// token, nil := generateToken(privateKey, teamID, clientID)
 
-	redirectURL, ok := config["redirect_url"]
-	if !ok {
-		return nil, errors.New("Apple redirect URL is missing")
-	}
+	// redirectURL, ok := config["redirect_url"]
+	// if !ok {
+	// 	return nil, errors.New("Apple redirect URL is missing")
+	// }
 
-	oauthConfig := &oauth2.Config{
-		ClientID:     clientID,
-		ClientSecret: token,
-		KeyID:        keyID,
-		RedirectURL:  redirectURL,
-		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.email",
-			"https://www.googleapis.com/auth/userinfo.profile",
-		},
-		Endpoint: googleOAuth2.Endpoint,
-	}
+	// oauthConfig := &oauth2.Config{
+	// 	ClientID:     clientID,
+	// 	ClientSecret: token,
+	// 	KeyID:        keyID,
+	// 	RedirectURL:  redirectURL,
+	// 	Scopes: []string{
+	// 		"https://www.googleapis.com/auth/userinfo.email",
+	// 		"https://www.googleapis.com/auth/userinfo.profile",
+	// 	},
+	// 	Endpoint: googleOAuth2.Endpoint,
+	// }
 
-	log.Printf("Apple OAuth config initialized: %+v", oauthConfig)
+	// log.Printf("Apple OAuth config initialized: %+v", oauthConfig)
 
-	return &AppleProvider{
-		config:         oauthConfig,
-		sessionManager: sessionManager,
-	}, nil
+	// return &AppleProvider{
+	// 	config:         oauthConfig,
+	// 	sessionManager: sessionManager,
+	// }, nil
 
 	// return &Apple{
 	// 	baseProvider: &baseProvider{

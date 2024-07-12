@@ -34,8 +34,8 @@ func NewProvider(providerType ProviderType, config map[string]string, sessionMan
 	switch providerType {
 	case Google:
 		return NewGoogleProvider(config, sessionManager)
-	case Apple:
-		return NewAppleProvider(config, sessionManager)
+	// case Apple:
+	// 	return NewAppleProvider(config, sessionManager)
 
 	default:
 		return nil, fmt.Errorf("unsupported provider type: %s", providerType)

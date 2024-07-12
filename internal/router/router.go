@@ -1,30 +1,26 @@
-// internal/router/router.go
 package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/majiayu000/gin-starter/internal/handlers"
 	"github.com/majiayu000/gin-starter/internal/middleware"
+	"gorm.io/gorm"
 )
 
-// SetupRouter 初始化路由
-func SetupRouter() *gin.Engine {
+func SetupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 
 	// 使用中间件
 	r.Use(middleware.Logger())
-	// r.GET("/", handlers.HelloWorld)
-	// 设置路由
-	api := r.Group("/api")
-	{
-		api.GET("/user/:id", handlers.GetUser)
-		// 在这里添加更多路由
-	}
 
-	// root := r.Group("/")
-	// {
-	// 	root.GET("/", handlers.HelloWorld)
-	// }
+	// 设置 API 路由组
+	api := r.Group("/api/v1")
+
+	// 设置用户路由
+	SetupUserRoutes(api)
+
+	// 设置年级路由
+	SetupGradeRoutes(api, db)
+	SetupUnitRoutes(api, db)
 
 	return r
 }

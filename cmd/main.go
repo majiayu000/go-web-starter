@@ -8,12 +8,13 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
-	"github.com/gin-gonic/gin"
 	config "github.com/majiayu000/gin-starter/configs"
 
 	"github.com/majiayu000/gin-starter/internal/auth"
 	"github.com/majiayu000/gin-starter/internal/auth/oauth"
+	"github.com/majiayu000/gin-starter/internal/database"
 	"github.com/majiayu000/gin-starter/internal/handlers"
+	"github.com/majiayu000/gin-starter/internal/router"
 )
 
 func main() {
@@ -26,14 +27,9 @@ func main() {
 	fmt.Println("cfg is", cfg.OAuth.Apple)
 	keyPath := filepath.Join(".", cfg.OAuth.Apple.KeyPath)
 	fmt.Println("key path is", keyPath)
-	// privateKeyData, err := os.ReadFile(keyPath)
-	// if err != nil {
-	// 	log.Fatalf("无法读取私钥文件: %v", err)
-	// }
-	// privateKeyString := string(privateKeyData)
-	// fmt.Println("private key is", privateKeyString)
-
-	// 初始化 OAuthManager
+	// fmt.Printf("Loaded config: %+v\n", cfg)
+	fmt.Printf("MySQL Host: %s\n", cfg.DB.MySQL.Host)
+	// fmt.Printf("MySQL Port: %d\n", config.MySQL.Port)
 	oauthConfig := map[string]map[string]string{
 		"google": {
 			"client_id":     cfg.OAuth.Google.ClientID,
@@ -63,14 +59,17 @@ func main() {
 		sessionManager,
 	)
 
-	appleProvider, _ := oauth.NewAppleProvider(
-		oauthConfig["apple"],
-		sessionManager,
-	)
-	fmt.Println(appleProvider)
 	oauthManager.AddProvider("google", googleProvider)
 	authHandler := handlers.NewAuthHandler(oauthManager, sessionManager)
-	r := gin.Default()
+
+	// 初始化数据库连接
+	db, err := database.InitDB(cfg)
+	if err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+
+	// 设置路由
+	r := router.SetupRouter(db)
 
 	r.Use(sessions.Sessions("mysession", store))
 

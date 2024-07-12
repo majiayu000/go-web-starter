@@ -26,6 +26,16 @@ type Config struct {
 	Server struct {
 		Port int `mapstructure:"port"`
 	} `mapstructure:"server"`
+	DB struct {
+		MySQL struct {
+			Host     string `mapstructure:"host"`
+			Port     int    `mapstructure:"port"`
+			User     string `mapstructure:"user"`
+			Password string `mapstructure:"password"`
+			Name     string `mapstructure:"name"`
+			Prefix   string `mapstructure:"prefix"`
+		} `mapstructure:"mysql"`
+	} `mapstructure:"db"`
 }
 
 func LoadConfig(configPath string) (*Config, error) {
@@ -54,7 +64,10 @@ func LoadConfig(configPath string) (*Config, error) {
 	if envClientSecret := viper.GetString("GOOGLE_CLIENT_SECRET"); envClientSecret != "" {
 		config.OAuth.Google.ClientSecret = envClientSecret
 	}
-	fmt.Println(config)
+
+	// 从环境变量覆盖MySQL配置
+
+	fmt.Printf("Loaded config: %+v\n", config)
 
 	return &config, nil
 }
