@@ -68,8 +68,13 @@ func main() {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
+	redis, err := database.InitRedis(cfg)
+	if err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+
 	// 设置路由
-	r := router.SetupRouter(db)
+	r := router.SetupRouter(db, redis, cfg)
 
 	r.Use(sessions.Sessions("mysession", store))
 

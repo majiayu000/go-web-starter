@@ -1,0 +1,33 @@
+package handlers
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/majiayu000/gin-starter/internal/models"
+	"github.com/majiayu000/gin-starter/internal/services"
+)
+
+type ChatHandler struct {
+	chatService services.ChatService
+}
+
+func NewChatHandler(cs services.ChatService) *ChatHandler {
+	return &ChatHandler{chatService: cs}
+}
+
+func (h *ChatHandler) HandleChat(c *gin.Context) {
+	var req models.ChatRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	resp, err := h.chatService.ProcessChat(c.Request.Context(), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}

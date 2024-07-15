@@ -35,7 +35,25 @@ type Config struct {
 			Name     string `mapstructure:"name"`
 			Prefix   string `mapstructure:"prefix"`
 		} `mapstructure:"mysql"`
+		Redis struct {
+			Host     string `mapstructure:"host"`
+			Port     int    `mapstructure:"port"`
+			User     string `mapstructure:"user"`
+			Password string `mapstructure:"password"`
+			Name     string `mapstructure:"name"`
+			Prefix   string `mapstructure:"prefix"`
+		} `mapstructure:"redis"`
 	} `mapstructure:"db"`
+	LLM struct {
+		AzureOpenAI struct {
+			APIKey              string `mapstructure:"api_key"`
+			Endpoint            string `mapstructure:"endpoint"`
+			DeploymentName      string `mapstructure:"deployment_name"`
+			SystemPromptZh      string `mapstructure:"system_prompt_zh"`
+			SystemPromptEn      string `mapstructure:"system_prompt_en"`
+			SystemPromptDefault string `mapstructure:"system_prompt_default"`
+		} `mapstructure:"azure_openai"`
+	} `mapstructure:"llm"`
 }
 
 func LoadConfig(configPath string) (*Config, error) {
@@ -68,6 +86,7 @@ func LoadConfig(configPath string) (*Config, error) {
 	// 从环境变量覆盖MySQL配置
 
 	fmt.Printf("Loaded config: %+v\n", config)
+	fmt.Printf("APIKey: %s\n", config.LLM.AzureOpenAI.APIKey)
 
 	return &config, nil
 }
